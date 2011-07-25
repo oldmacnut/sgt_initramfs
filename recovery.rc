@@ -44,6 +44,8 @@ on early-fs
     insmod /lib/modules/rfs_glue.ko
     insmod /lib/modules/rfs_fat.ko
     insmod /lib/modules/storage.ko
+    insmod /lib/modules/jbd2.ko
+    insmod /lib/modules/ext4.ko
 
     # parameter block
     mkdir /mnt/.lfs 0755 root root
@@ -51,8 +53,7 @@ on early-fs
     mount j4fs /dev/block/stl6 /mnt/.lfs
     insmod /lib/modules/param.ko
     insmod /lib/modules/dpram_recovery.ko
-    insmod /lib/modules/jbd2.ko
-    insmod /lib/modules/ext4.ko
+
 
 on fs
     mount tmpfs tmpfs /tmp
