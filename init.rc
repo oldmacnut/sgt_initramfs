@@ -56,8 +56,13 @@ loglevel 3
     insmod /lib/modules/param.ko
     insmod /lib/modules/dpram_vzw.ko
 
-# samsung module
+# modules
     insmod /lib/modules/storage.ko
+    insmod /lib/modules/ansi_cprng.ko
+    insmod /lib/modules/bthid.ko
+    insmod /lib/modules/scsi_wait_scan.ko
+    insmod /lib/modules/cifs.ko
+    insmod /lib/modules/hotspot_event_monitoring.ko
 
 # ko files for bthid
     insmod /lib/modules/bthid.ko
@@ -142,21 +147,21 @@ on fs
     #mount yaffs2 mtd@system /system ro remount
     #mount yaffs2 mtd@userdata /data nosuid nodev
     #mount yaffs2 mtd@cache /cache nosuid nodev
-    mount rfs /dev/block/stl9 /system check=no
-    mount rfs /dev/block/stl9 /system ro remount
+    #mount rfs /dev/block/stl9 /system check=no
+    mount ext4 /dev/block/stl9 /system wait nodev noatime nodiratime noauto_da_alloc
     
 # use movinand second partition as /data. d.moskvitin
     exec apply_disk_policy
     
     mkdir /data
-    mount rfs /dev/block/mmcblk0p2 /data nosuid nodev check=no
+    mount ext4 /dev/block/mmcblk0p2 /data  wait nosuid nodev noatime nodiratime noauto_da_alloc
     chown system system /data
     chmod 0771 /data    
     
 
     
     mkdir /dbdata
-    mount rfs /dev/block/stl10 /dbdata nosuid nodev check=no
+    mount ext4 /dev/block/stl10 /dbdata  wait nosuid nodev noatime nodiratime noauto_da_alloc
     chown system system /dbdata
     chmod 0771 /dbdata
     chmod 0771 /dbdata
@@ -203,7 +208,7 @@ on post-fs
 
     # Same reason as /data above
     mkdir /cache
-    mount rfs /dev/block/mmcblk0p1 /cache nosuid nodev check=no
+    mount ext4 /dev/block/stl11 /cache nosuid nodev noatime nodiratime errors=continue nobh data=writeback barrier=0 noauto_da_alloc
     chown system cache /cache
     chmod 0770 /cache
 
@@ -663,8 +668,6 @@ service pbap /system/bin/sdptool add --channel=19 PBAP
 service installd /system/bin/installd
     socket installd stream 600 system system
 
-service flash_recovery /system/etc/install-recovery.sh
-    oneshot
 
 service racoon /system/bin/racoon
     socket racoon stream 600 system system
